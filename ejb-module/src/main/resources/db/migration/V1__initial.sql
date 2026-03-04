@@ -1,0 +1,10 @@
+CREATE TABLE BENEFICIO (
+                           ID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                           NOME VARCHAR(100) NOT NULL,
+                           DESCRICAO VARCHAR(255) NULL,
+                           VALOR DECIMAL(15,2) NOT NULL,
+                           ATIVO BIT NOT NULL CONSTRAINT DF_BENEFICIO_ATIVO DEFAULT 1,
+                           VERSION BIGINT NOT NULL CONSTRAINT DF_BENEFICIO_VERSION DEFAULT 0
+);
+
+
