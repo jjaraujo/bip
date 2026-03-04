@@ -2,7 +2,7 @@ package br.com.bip.ejb;
 
 import br.com.bip.domain.BeneficioEntity;
 import br.com.bip.domain.port.IBeneficioEjbService;
-import br.com.bip.domain.exception.EjbException;
+import br.com.bip.domain.exception.EjbAppException;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -49,32 +49,49 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
     @Override
     public List<BeneficioEntity> listAll() {
-        return em.createQuery("from BeneficioEntity", BeneficioEntity.class)
+        return em.createQuery("select b from BeneficioEntity b", BeneficioEntity.class)
                 .getResultList();
     }
 
     @Override
-    public void transfer(@NotNull Long fromId, @NotNull Long toId, @NotNull BigDecimal valor) throws EjbException {
-
+    public void transfer(@NotNull Long fromId, @NotNull Long toId, @NotNull BigDecimal valor) throws EjbAppException {
+        if (fromId.equals(toId)) {
+            throw new EjbAppException("Transferência para o mesmo benefício não é permitida");
+        }
         BeneficioEntity from = em.find(
                 BeneficioEntity.class,
                 fromId,
                 LockModeType.PESSIMISTIC_WRITE
         );
+        if (from == null) {
+            throw new EjbAppException("Benefício origem não encontrado: " + fromId);
+        }
 
         BeneficioEntity to = em.find(
                 BeneficioEntity.class,
                 toId,
                 LockModeType.PESSIMISTIC_WRITE
         );
-
-        from.setValor(from.getValor().subtract(valor));
-        if(from.getValor().doubleValue() < 0) {
-            throw new EjbException("Saldo indispoível para transferencia");
+        if (to == null) {
+            throw new EjbAppException("Benefício destino não encontrado: " + toId);
         }
-        to.setValor(to.getValor().add(valor));
+        BigDecimal fromSaldo = from.getValor() != null ? from.getValor() : BigDecimal.ZERO;
+        BigDecimal toSaldo   = to.getValor() != null ? to.getValor() : BigDecimal.ZERO;
+
+        if (fromSaldo.compareTo(valor) < 0) {
+            throw new EjbAppException("Saldo indisponível para transferência");
+        }
+
+        from.setValor(fromSaldo.subtract(valor));
+        to.setValor(toSaldo.add(valor));
 
         em.merge(from);
         em.merge(to);
+    }
+
+    private void validacoes(@NotNull Long fromId, @NotNull Long toId) throws EjbAppException {
+        if (fromId.equals(toId)) {
+            throw new EjbAppException("Transferência para o mesmo benefício não é permitida");
+        }
     }
 }

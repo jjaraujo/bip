@@ -1,4 +1,4 @@
-package br.com.bip.backend.beneficio;
+package br.com.bip.backend.service;
 
 import br.com.bip.domain.port.IBeneficioEjbService;
 import org.springframework.stereotype.Component;

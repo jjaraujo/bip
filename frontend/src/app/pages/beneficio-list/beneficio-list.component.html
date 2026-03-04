@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="toolbar" style="justify-content: space-between; margin-bottom: 10px;">
+      <div class="toolbar">
+        <h2 style="margin:0;">Benefícios</h2>
+      </div>
+      <div class="toolbar">
+        <button class="primary" routerLink="/beneficios/novo">+ Novo</button>
+        <button (click)="reload()" [disabled]="loading()">Atualizar lista</button>
+      </div>
+    </div>
+
+    <div *ngIf="error()" class="error" style="margin-bottom: 12px;">{{ error() }}</div>
+    <div *ngIf="loading()">Carregando...</div>
+
+    <table *ngIf="!loading()">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Valor</th>
+          <th>Ativo</th>
+          <th style="width: 260px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of items()">
+          <td>{{ b.id }}</td>
+          <td>
+            <div style="font-weight: 600;">{{ b.nome }}</div>
+            <div style="font-size: 12px; opacity:.8;">{{ b.descricao }}</div>
+          </td>
+          <td>{{ toMoney(b.valor) }}</td>
+          <td>{{ b.ativo ? '✅' : '❌' }}</td>
+          <td class="toolbar">
+            <button routerLink="/beneficios/{{b.id}}/editar">Editar</button>
+            <button class="danger" (click)="remove(b)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

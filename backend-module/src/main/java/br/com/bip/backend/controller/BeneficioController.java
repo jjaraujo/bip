@@ -1,10 +1,10 @@
 package br.com.bip.backend.controller;
 
-import br.com.bip.backend.beneficio.BeneficioAppService;
+import br.com.bip.backend.service.BeneficioAppService;
 import br.com.bip.backend.dto.BeneficioDto;
 import br.com.bip.backend.dto.TransferRequest;
 import br.com.bip.domain.BeneficioEntity;
-import br.com.bip.domain.exception.EjbException;
+import br.com.bip.domain.exception.EjbAppException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class BeneficioController {
     }
 
     @GetMapping("/{id}")
-    public BeneficioEntity findById(@PathVariable Long id) {
+    public BeneficioEntity findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
 
@@ -38,13 +38,13 @@ public class BeneficioController {
     }
 
     @PutMapping("/{id}")
-    public BeneficioEntity update(@PathVariable Long id, @Valid @RequestBody BeneficioDto dto) {
+    public BeneficioEntity update(@PathVariable("id") Long id, @Valid @RequestBody BeneficioDto dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         service.delete(id);
     }
 
@@ -53,7 +53,7 @@ public class BeneficioController {
     public void transfer(@Valid @RequestBody TransferRequest req) {
         try {
             service.transfer(req);
-        } catch (EjbException e) {
+        } catch (EjbAppException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,9 +1,9 @@
-package br.com.bip.backend.beneficio;
+package br.com.bip.backend.service;
 
 import br.com.bip.backend.dto.BeneficioDto;
 import br.com.bip.backend.dto.TransferRequest;
 import br.com.bip.domain.BeneficioEntity;
-import br.com.bip.domain.exception.EjbException;
+import br.com.bip.domain.exception.EjbAppException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,17 +40,16 @@ public class BeneficioAppService {
         gateway.ejb().delete(id);
     }
 
-    public void transfer(TransferRequest req) throws EjbException {
-        gateway.ejb().transfer(req.getFromId(), req.getToId(), req.getAmount());
+    public void transfer(TransferRequest req) throws EjbAppException {
+        gateway.ejb().transfer(req.fromId(), req.toId(), req.valor());
     }
 
     private static BeneficioEntity toEntity(BeneficioDto dto) {
         BeneficioEntity e = new BeneficioEntity();
-        e.setId(dto.getId());
-        e.setNome(dto.getNome());
-        e.setDescricao(dto.getDescricao());
-        e.setValor(dto.getValor());
-        e.setAtivo(dto.isAtivo());
+        e.setNome(dto.nome());
+        e.setDescricao(dto.descricao());
+        e.setValor(dto.valor());
+        e.setAtivo(dto.ativo());
         return e;
     }
 }

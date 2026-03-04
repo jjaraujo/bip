@@ -3,23 +3,12 @@ package br.com.bip.backend.dto;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class TransferRequest {
+public record TransferRequest (
 
-    @NotNull
-    private Long fromId;
+    @NotNull Long fromId,
 
-    @NotNull
-    private Long toId;
+    @NotNull Long toId,
 
-    @NotNull
-    private BigDecimal amount;
+    @NotNull BigDecimal valor){
 
-    public Long getFromId() { return fromId; }
-    public void setFromId(Long fromId) { this.fromId = fromId; }
-
-    public Long getToId() { return toId; }
-    public void setToId(Long toId) { this.toId = toId; }
-
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
 }
