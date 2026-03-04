@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="toolbar" style="justify-content: space-between; margin-bottom: 10px;">
+      <h2 style="margin:0;">Transferência</h2>
+      <a routerLink="/beneficios">Voltar</a>
+    </div>
+
+    <div *ngIf="error()" class="error" style="margin-bottom: 12px;">{{ error() }}</div>
+    <div *ngIf="ok()" style="margin-bottom: 12px;">✅ Transferência concluída.</div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="row">
+        <div>
+          <label>From ID *</label>
+          <input formControlName="fromId" placeholder="Ex: 1" />
+        </div>
+        <div>
+          <label>To ID *</label>
+          <input formControlName="toId" placeholder="Ex: 2" />
+        </div>
+        <div>
+          <label>Valor *</label>
+          <input formControlName="valor" placeholder="Ex: 10.00" />
+        </div>
+      </div>
+
+      <div class="toolbar" style="margin-top: 14px; justify-content: flex-end;">
+        <button type="submit" class="primary" [disabled]="sending() || form.invalid">
+          {{ sending() ? 'Enviando...' : 'Transferir' }}
+        </button>
+      </div>
+    </form>
+  </div>
